@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -37,14 +38,30 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    if(n === 0){
+      return [];
+    }else if(n > array.length){
+      return array;
+    }else{
+      return n === undefined ? array[array.length - 1]: array.slice(-n);
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   //
   // Note: _.each does not have a return value, but rather simply runs the
-  // iterator function over each item in the input collection.
+  // iterator function over each element in the input collection.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)){
+      for(var i = 0; i < collection.length; i++){
+        iterator(collection[i], i, collection);
+      }
+    }else{
+      for(var key in collection){
+        iterator(collection[key], key, collection)
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -55,8 +72,8 @@
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
+    _.each(array, function(element, index) {
+      if (element === target && result === -1) {
         result = index;
       }
     });
@@ -66,16 +83,49 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var result = [];
+    _.each(collection, function(element){
+      if(test(element)){
+        result.push(element);
+      }
+    });
+    return result; 
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(element){
+      if(!test(element)){
+        return element;
+      }
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    var result = [];
+    var transformed = [];
+    var found;
+
+    if(isSorted){
+      _.each(array, function(element){
+        if(_.indexOf(transformed, iterator(element)) === -1){
+          transformed.push(iterator(element));
+          result.push(element);
+        }
+      });
+    }else {
+      _.each(array, function(element){
+        found = _.indexOf(result, element);
+        if(found === -1){
+          result.push(element);
+        }
+      });
+    }
+
+    return result;
   };
 
 
@@ -84,6 +134,12 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var result = [];
+
+    _.each(collection, function(element, i, coll){
+      result.push(iterator(element));
+    });
+    return result;
   };
 
   /*
@@ -99,13 +155,13 @@
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
-    return _.map(collection, function(item){
-      return item[key];
+    return _.map(collection, function(element){
+      return element[key];
     });
   };
 
   // Reduces an array or object to a single value by repetitively calling
-  // iterator(accumulator, item) for each item. accumulator should be
+  // iterator(accumulator, element) for each element. accumulator should be
   // the return value of the previous iterator call.
   //  
   // You can pass in a starting value for the accumulator as the third argument
@@ -125,17 +181,38 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    //This reduce method did not work because it did not take into account whether an accumulator was passed into it
+    // var acc = [];
+
+    // _.each(collection, function(element){
+    //   acc = iterator(acc, element);
+    // });
+    // return acc; 
+    //if no accumulator is give
+    if(accumulator === undefined){
+      //use the first element in the collection array to set the accumulator
+      accumulator = collection[0];
+      //remove the first element in the array since it was passed to accumultor as value
+      collection = collection.slice(1);
+    }
+    //iterate over the collection array
+      _.each(collection, function(element, i){
+        //accumulator equals the value of the iterator function
+        accumulator = iterator(accumulator, element, i);
+      });
+      //return result in accumulator
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
+    return _.reduce(collection, function(wasFound, element) {
       if (wasFound) {
         return true;
       }
-      return item === target;
+      return element === target;
     }, false);
   };
 
@@ -143,6 +220,7 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -281,7 +359,7 @@
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
-  // every item shared between all the passed-in arrays.
+  // every element shared between all the passed-in arrays.
   _.intersection = function() {
   };
 
