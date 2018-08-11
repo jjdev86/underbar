@@ -220,7 +220,28 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    
+    //if no iterator was given, determine if values in collection are true
+    if(!iterator){
+      return _.reduce(collection, function(prev, curr){
+        if(prev & curr){
+          return true;
+        }else {
+          return false;
+        }
+        //the accumulator is started as a boolean 
+      }, true);
+    } else{
+      return _.reduce(collection, function(prev, curr){
+        //if the value of value of the iterator function is not true
+        if(!iterator(curr)){
+          return false;
+          //if the value of the function is true, continue to check the next value and keep the prev value as true
+        }else {
+          return prev;
+        }
+        //initated the accumulator as a boolean since we want a boolean to be return
+      }, true);
+    }
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
