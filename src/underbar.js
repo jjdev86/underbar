@@ -248,23 +248,16 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    //determine if element exist in array
-   // var existInElement = false;
-    //determine if element exists in array
-    if(!iterator){
-        return _.every(collection, function(ele){
-            return (ele)
-        }, false);
+    //determine if element is present while using iterator "function"
+    if(iterator){
+      return !(_.every(collection, function(ele){
+        return !iterator(ele);
+      }));
     }else{
-        return _.every(collection, function(ele, i){
-            if(iterator(ele)){
-                return true;
-            }else {
-                return false;
-            }
-        }, true);
+      return !(_.every(collection, function(ele){
+        return !(ele);
+      }));
     }
-    //return existInElement;  
   };
 
 
@@ -287,11 +280,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    //although no other object was passed to the function, JS will pass any arguments to a default "argument"
+    _.each(arguments, function(item){
+      _.each(item, function(value, key){
+        obj[key] = value;
+      });
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    //"arguments" is default in case that no parameters are name in the function, but passed when called
+    _.each(arguments, function(item){
+      _.each(item, function(value, key){
+        if(obj[key] === undefined){
+          obj[key] = value;
+        }
+      });
+    });
+    return obj;
   };
 
 
