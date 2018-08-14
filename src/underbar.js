@@ -248,14 +248,23 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    return _.every(collection, function(ele){
-      if(iterator(ele)){
-        return false;
-      }else {
-        return true;
-      }
-    }, true);
-
+    //determine if element exist in array
+   // var existInElement = false;
+    //determine if element exists in array
+    if(!iterator){
+        return _.every(collection, function(ele){
+            return (ele)
+        }, false);
+    }else{
+        return _.every(collection, function(ele, i){
+            if(iterator(ele)){
+                return true;
+            }else {
+                return false;
+            }
+        }, true);
+    }
+    //return existInElement;  
   };
 
 
