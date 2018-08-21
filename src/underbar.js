@@ -344,6 +344,25 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    //create a cache obj where the function will be stored
+    var cache = {};
+    //return an annonymous function
+    return function() {
+      //create a key
+      var key = JSON.stringify(arguments);
+      //if they key is present in the cache obj
+      if(cache[key]){
+        //return the key found in the cache obj
+        return cache[key];
+      }else{
+        //create a variable that will store our function
+        var val = func.apply(this, arguments);
+        //store the function of the fucntion's value in cache
+        cache[key] = val;
+        //return the value;
+        return val;
+      }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -353,7 +372,22 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    //use setTimeout
+    //setTimeout(function(), {console.log('hello')}, 5000);
+    //So why use Array.prototype? The Array is the object which we create new arrays from (new Array()), 
+    //and these new arrays are passed methods and properties, like slice. 
+    //These methods are stored in the [Class].prototype object. 
+    //So, for efficiency sake, instead of accessing the slice method by (new Array()).slice.call() or [].slice.call(), 
+    //we just get it straight from the prototype. This is so we don't have to initialise a new array.
+
+    //we use the 2 to remove the first argument passed in to the delay function, then it will run the rest of the arguments given to it
+    //var args = Array.prototype.slice.call(arguments, 2); //different way to do the same as below.
+    var args = [...arguments].slice(2)
+     return setTimeout(function(){
+       return func.apply(this, args);
+    }, wait);
   };
+
 
 
   /**
@@ -367,6 +401,9 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    //create a copy of the array passed into the function
+    var shuffled = array.slice();
+    //
   };
 
 
