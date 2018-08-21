@@ -348,9 +348,9 @@
     var cache = {};
     //return an annonymous function
     return function() {
-      //create a key
+      //stringify arguments into key
       var key = JSON.stringify(arguments);
-      //if they key is present in the cache obj
+      //if the func(key) is present in the cache obj
       if(cache[key]){
         //return the key found in the cache obj
         return cache[key];
@@ -403,7 +403,10 @@
   _.shuffle = function(array) {
     //create a copy of the array passed into the function
     var shuffled = array.slice();
-    //
+    //use sort() to sort the array
+    shuffled.sort();
+    //return array
+    return shuffled;
   };
 
 
