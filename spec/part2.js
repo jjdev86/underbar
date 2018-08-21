@@ -390,9 +390,9 @@
       });
 
       it('should return the result of the first call for every subsequent call', function() {
-        var add = _.once(function(x,y,z) {
-          return x + y + z;
-        });
+      var add = _.once(function(x,y,z) {
+        return x + y + z;
+      });
 
         expect(add(1,2,3)).to.equal(6);
         expect(add(4,5,6)).to.equal(6);
@@ -487,7 +487,7 @@
       });
 
       it('should have successfully passed function arguments in', function() {
-        _.delay(callback, 100, 1, 2);
+        _.delay(callback, 100, 1, 2, 4);
         clock.tick(100);
 
         expect(callback).to.have.been.calledWith(1, 2);
